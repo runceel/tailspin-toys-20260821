@@ -59,7 +59,13 @@ function createRemoteCallback(sqlite: DatabaseSync): AsyncRemoteCallback {
     };
 }
 
-/** Run generated migration statements atomically through Node's SQLite driver. */
+/**
+ * Apply generated SQL migration statements in a single transaction.
+ *
+ * @param sqlite - Active Node SQLite connection used for the migration.
+ * @param queries - SQL statements emitted by `drizzle-kit` for the current schema version.
+ * @returns Nothing. The function commits the batch or rolls it back on failure.
+ */
 export function executeMigrationQueries(sqlite: DatabaseSync, queries: string[]): void {
     sqlite.exec('BEGIN');
     try {
@@ -73,12 +79,22 @@ export function executeMigrationQueries(sqlite: DatabaseSync, queries: string[])
     }
 }
 
-/** Create a Drizzle client for the given local SQLite connection URL. */
+/**
+ * Create a Drizzle client for the configured SQLite database URL.
+ *
+ * @param url - Local file URL or `:memory:` database path.
+ * @returns A Drizzle client bound to the supplied SQLite connection.
+ */
 export function createDatabase(url: string = process.env.DATABASE_URL ?? DEFAULT_DATABASE_URL): Database {
     return createDatabaseConnection(url).db;
 }
 
-/** Create the Drizzle client and its Node SQLite connection for migration workflows. */
+/**
+ * Open both the Node SQLite connection and the Drizzle wrapper used by migrations.
+ *
+ * @param url - Local file URL or `:memory:` database path.
+ * @returns The matching database connection pair used by migration and seed workflows.
+ */
 export function createDatabaseConnection(
     url: string = process.env.DATABASE_URL ?? DEFAULT_DATABASE_URL,
 ): DatabaseConnection {
@@ -88,7 +104,11 @@ export function createDatabaseConnection(
     return { db, sqlite };
 }
 
-/** Shared singleton database client used by pages at build time. */
+/**
+ * Return the singleton build-time database client shared across the Astro app.
+ *
+ * @returns A cached Drizzle client that reuses the same SQLite connection for pages.
+ */
 export function getDatabase(): Database {
     if (!cachedDb) {
         cachedDb = createDatabase();
