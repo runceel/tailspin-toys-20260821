@@ -63,6 +63,23 @@ npm run test:unit   # Vitest unit tests (transforms + data-access helpers)
 npm run test:e2e    # Playwright E2E tests (builds + previews the static site first)
 ```
 
+## Repository coding standards
+
+This repository follows a small but explicit set of standards to keep the codebase easy to maintain and consistent with the Astro + Drizzle setup:
+
+- Prefer comments that explain intent, constraints, or trade-offs rather than restating the obvious. "Why" is more useful than "what".
+- Exported helpers in `db/**/*.ts` and `src/lib/**/*.ts` should include JSDoc/TSDoc with purpose, parameters, and return values.
+- Reusable Astro components should document the `Props` contract directly above the `interface Props` block.
+- Keep TypeScript explicit: prefer typed props, typed helper signatures, and consistent formatting (single quotes, semicolons, and 4-space indentation).
+- Run the repo checks before shipping: `npm run lint`, `npm run test:unit`, and the relevant type-check scripts.
+
+The detailed repo guidance lives in the instruction files under [`.github/instructions/`](.github/instructions/):
+
+- [`astro.instructions.md`](.github/instructions/astro.instructions.md)
+- [`drizzle.instructions.md`](.github/instructions/drizzle.instructions.md)
+- [`style.instructions.md`](.github/instructions/style.instructions.md)
+- [`unit-tests.instructions.md`](.github/instructions/unit-tests.instructions.md)
+
 ## Linting
 
 The frontend uses ESLint to enforce code quality across TypeScript and Astro files. Run it with:

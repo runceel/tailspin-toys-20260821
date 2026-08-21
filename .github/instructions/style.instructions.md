@@ -46,6 +46,12 @@ ALL UI components MUST use dark theme colors:
 - Use semantic grouping: layout, spacing, colors, typography
 - Keep utility combinations readable and maintainable
 
+## TypeScript and formatting conventions
+
+- Keep TypeScript and Astro files formatted consistently with the repository defaults: single quotes, semicolons, and 4-space indentation in frontmatter and logic blocks.
+- Prefer explicit types for component props, database helper inputs/returns, and any exported API surface.
+- Linting is the enforcement gate for the project, so fix the warnings and errors reported by `npm run lint` before merging.
+
 ## Modern UI Patterns
 
 - Rounded corners: `rounded-lg`, `rounded-xl`, `rounded-2xl`
