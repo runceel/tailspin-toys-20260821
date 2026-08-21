@@ -24,4 +24,31 @@ test.describe('Home Page', () => {
     // Check that the welcome message is present using more specific locator
     await expect(page.getByText('Find your next game! And maybe even back one! Explore our collection!')).toBeVisible();
   });
+
+  test('should filter the game list by category', async ({ page }) => {
+    await page.getByRole('checkbox', { name: 'Filter games by Strategy' }).check();
+
+    await expect(page.getByRole('link', { name: /DevOps Dominion/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Code Puzzle Chronicles/i })).not.toBeVisible();
+    await expect(page.getByText('Showing 4 games')).toBeVisible();
+  });
+
+  test('should filter the game list by publisher', async ({ page }) => {
+    await page.getByTestId('publisher-filter').selectOption({ label: 'CodeForge Studios' });
+
+    await expect(page.getByRole('link', { name: /DevOps Dominion/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Pipeline Conquest/i })).not.toBeVisible();
+    await expect(page.getByText('Showing 6 games')).toBeVisible();
+  });
+
+  test('should combine category and publisher filters', async ({ page }) => {
+    await page.getByRole('checkbox', { name: 'Filter games by Strategy' }).check();
+    await page.getByRole('checkbox', { name: 'Filter games by Puzzle' }).check();
+    await page.getByTestId('publisher-filter').selectOption({ label: 'CodeForge Studios' });
+
+    await expect(page.getByRole('link', { name: /DevOps Dominion/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Code Puzzle Chronicles/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Pipeline Conquest/i })).not.toBeVisible();
+    await expect(page.getByText('Showing 2 games')).toBeVisible();
+  });
 });
